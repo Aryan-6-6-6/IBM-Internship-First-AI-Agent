@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🌊 Marine AI Agent - SDG 14</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0fbff;
+    padding: 20px;
+}
+h1 {
+    color: #0077b6;
+}
+textarea, input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+}
+button {
+    padding: 10px 20px;
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    margin-top: 10px;
+    cursor: pointer;
+}
+#response {
+    margin-top: 20px;
+    white-space: pre-wrap;
+    background-color: #e0f7ff;
+    padding: 15px;
+    border-radius: 8px;
+}
+</style>
+</head>
+<body>
+<h1>🌊 Marine AI Agent - SDG 14</h1>
+<p>Ask me anything about marine life, oceans, underwater species, or water conservation.</p>
+
+<textarea id="query" rows="4" placeholder="Type your question here..."></textarea>
+<button onclick="sendQuery()">Ask MarineBot</button>
+
+<div id="response"></div>
+
+<script>
+async function sendQuery() {
+    const query = document.getElementById("query").value;
+    const responseDiv = document.getElementById("response");
+
+    if (!query.trim()) {
+    responseDiv.innerText = "❌ Please enter a question.";
+    return;
+    }
+
+    responseDiv.innerText = "⏳ Thinking...";
+    try {
+    const res = await fetch("/chat", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: query })
+    });
+
+    const data = await res.json();
+    if (data.response) {
+        responseDiv.innerText = "🤖 " + data.response;
+    } else {
+        responseDiv.innerText = "❌ Error: " + (data.error || "Unknown error.");
+    }
+    } catch (err) {
+    responseDiv.innerText = "❌ Failed to connect to server.";
+    }
+}
+</script>
+</body>
+</html>
